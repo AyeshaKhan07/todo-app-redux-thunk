@@ -1,23 +1,40 @@
 import logo from './logo.svg';
 import './App.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { ADD_TASK } from './store/action-type/task-types';
 
 function App() {
+  const dispatch = useDispatch();
+  const taskList = useSelector(state => state.tasks);
+  const [newTask, setNewTask] = useState("");
+
+  function addTask() {
+    dispatch({type: ADD_TASK, payload: newTask});
+    setNewTask("");
+  }
+
+  function removeTask() {
+    // code
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <h1>To-Do List</h1>
+      <div className="add-task">
+        <input value={newTask} type="text" id="taskInput" placeholder="Add a new task" onChange={e => setNewTask(e.target.value)} />
+        <button id="addTask" onClick={addTask}>Add</button>
+      </div>
+      <ul id="taskList">
+        {
+          taskList.map((item, index) => {
+            return <li key={index}>
+              <p>{item}</p>
+              <button className='delete-task' onClick={removeTask}>Remove</button>
+            </li>
+          })
+        }
+      </ul>
     </div>
   );
 }
