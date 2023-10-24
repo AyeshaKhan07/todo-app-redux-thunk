@@ -1,8 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { useState } from 'react';
-import { ADD_TASK } from './store/action-type/task-types';
+import { useEffect, useState } from 'react';
+import taskActions from './store/actions/task-actions';
 
 function App() {
   const dispatch = useDispatch();
@@ -10,13 +9,17 @@ function App() {
   const [newTask, setNewTask] = useState("");
 
   function addTask() {
-    dispatch({type: ADD_TASK, payload: newTask});
+    dispatch(taskActions.addTask({title: newTask}));
     setNewTask("");
   }
 
   function removeTask() {
     // code
   }
+
+  useEffect(() => {
+    dispatch(taskActions.getTaskList());
+  }, [])
 
   return (
     <div className="app">
@@ -27,9 +30,9 @@ function App() {
       </div>
       <ul id="taskList">
         {
-          taskList.map((item, index) => {
-            return <li key={index}>
-              <p>{item}</p>
+          taskList && taskList.map((item, index) => {
+            return <li key={item.id}>
+              <p>{item.title}</p>
               <button className='delete-task' onClick={removeTask}>Remove</button>
             </li>
           })
